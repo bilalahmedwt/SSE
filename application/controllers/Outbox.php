@@ -37,14 +37,14 @@ class Outbox extends CI_Controller
 
     private $qaS = [],$outWorkorder,$cnti;
 
-    private $deptCodes = [
-        "Electrical Repair"=>"Electrical Repair",
-        "Boiler Repair"=>"Breakdowns",
-        "Electrical Inspection"=>"Fit Parts",
-        "Boiler Service & Inspection"=>"Installations",
-        "Electrical Fit Parts"=>"Electric Fit Parts" ,
-        "Gas Fit Parts"=>"Gas Fit Parts"
-    ];
+//    private $deptCodes = [
+//        "Electrical Repair"=>"Electrical Repair",
+//        "Boiler Repair"=>"Breakdowns",
+//        "Electrical Inspection"=>"Fit Parts",
+//        "Boiler Service & Inspection"=>"Installations",
+//        "Electrical Fit Parts"=>"Electric Fit Parts" ,
+//        "Gas Fit Parts"=>"Gas Fit Parts"
+//    ];
 
     private $msgId = [
         'None'=>[],
@@ -142,7 +142,7 @@ class Outbox extends CI_Controller
             //each.EventDataJson = each.EventDataJson.Replace(@"""{", "{").Replace(@"}"",", "},");
             //each.EventData = each.DateCreated<DateTime.Parse("2017-06-01")? each.EventDataJson.Replace(@"\\""", @"\\u022").Replace(@"/2""", @"/2\\u022").FromJSON<EventData>() : each.EventDataJson.Replace(@"\\""", @"\\u022").FromJSON<EventData>();
 
-            if(array_key_exists($val['EventData']['DepartmentName'],$this->deptCodes)){
+            if(array_key_exists($val['EventData']['DepartmentName'],$this->baseclass->deptCodes)){
                 $existingEvents[] = $val;
             }
         }

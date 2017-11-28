@@ -23,6 +23,15 @@ class BaseClass
     public $headers = array('client-id' => '1006', 'client-secret' => '9384fd12efe5b91eac73fabe70e636ba', 'Content-Type' => 'application/x-www-form-urlencoded');
     public $options = ['timeout'=>'100000','connect_timeout'=>'100000'];
 
+    public $deptCodes = [
+        "Electrical Repair"=>"Electrical Repair",
+        "Boiler Repair"=>"Breakdowns",
+        "Electrical Inspection"=>"Fit Parts",
+        "Boiler Service & Inspection"=>"Installations",
+        "Electrical Fit Parts"=>"Electric Fit Parts" ,
+        "Gas Fit Parts"=>"Gas Fit Parts"
+    ];
+
     public function findJob($params = [])
     {
         //$departmentId, $mpan, $woNo, $jobDate = ''
@@ -777,8 +786,8 @@ class BaseClass
     public function checkXmlFile($params = []){
 
         //print_r($params);
-        $file = $params;
-        if(date("d/m/Y",$file['date']) != date("d/m/Y",now()) && 'application/xml' == get_mime_by_extension($file['name'])) { // for live ,change condition to equals too
+        $file = $params['file'];
+        if('application/xml' == get_mime_by_extension($file['name'])) { // for live ,change condition to equals too
             //echo date("d/m/Y",now()).'--'.date("d/m/Y",$file['date']);
             //echo  get_mime_by_extension($file['name']);
             //print_r( simplexml_load_file($file['server_path']));
@@ -842,6 +851,11 @@ class BaseClass
                 log_message('error',"can't write ".OUTBOX .$file['name']);
             }
 
+        }elseif ($dir = 'invoice'){
+            $resp = $this->CI->format->factory($resp, 'json')->to_xml();
+            if(!write_file(INVOICE .$file['name'],$resp,'w+')){
+                log_message('error',"can't write ".INVOICE .$file['name']);
+            }
         }
 
     }

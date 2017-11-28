@@ -96,6 +96,7 @@ define('APP_SUBCODE','SSE');
 //default Path
 define('INBOX',FCPATH.'/assets/files/Inbox/');
 define('OUTBOX',FCPATH.'/assets/files/Outbox/');
+define('INVOICE',FCPATH.'/assets/files/Invoice/');
 define('INBOX_REJECTED',INBOX.'Rejected/');
 define('OUTBOX_REJECTED',OUTBOX.'Rejected/');
 define('INBOX_PROCESSED',INBOX.'Processed/');

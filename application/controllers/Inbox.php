@@ -60,14 +60,7 @@ class Inbox extends CI_Controller
         array("ElectricalWork","NonUrgentBreakdownService","Electrical Repair","Elec Non-Urgent, Elec Service")
     ];
 
-    private $deptCodes = [
-        "Electrical Repair"=>"Electrical Repair",
-        "Boiler Repair"=>"Breakdowns",
-        "Electrical Inspection"=>"Fit Parts",
-        "Boiler Service & Inspection"=>"Installations",
-        "Electrical Fit Parts"=>"Electric Fit Parts" ,
-        "Gas Fit Parts"=>"Gas Fit Parts"
-    ];
+
 
     public function index(){
 
@@ -87,7 +80,7 @@ class Inbox extends CI_Controller
         $files = get_dir_file_info(INBOX);
         //print_r($files); exit;
         foreach ($files as $file){
-            if($data = $this->baseclass->checkXmlFile(($file))){ //Check Valid XML --need to change when live
+            if($data = $this->baseclass->checkXmlFile(['file'=>$file]) && date("d/m/Y",$file['date']) != date("d/m/Y",now())){ //Check Valid XML --need to change when live
                 //print_r($data); exit;
                 if(($wo = $data['Request']['WorkOrders']['WorkOrder']) == NULL){
                     log_message('error','Workorder not found');
@@ -238,8 +231,8 @@ class Inbox extends CI_Controller
         foreach ($this->depts as $k=>$v){
             if($v[0] == $params['woGroup'] && $v[1] == $params['woType']){
                 $dept['dept'] = $v;
-                if(array_key_exists($v[2],$this->deptCodes)){
-                    $dept['code'] = $this->deptCodes[$v[2]];
+                if(array_key_exists($v[2],$this->baseclass->deptCodes)){
+                    $dept['code'] = $this->baseclass->deptCodes[$v[2]];
                 }else{
                     $dept['code'] = NULL;
                     //log_message('error','No Code found');
