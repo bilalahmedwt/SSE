@@ -76,9 +76,12 @@ class Inbox extends CI_Controller
 
     private function inbox()
     {
+        //from FTP download
+        $this->baseclass->ftpFile(['dir'=>['ftp'=>OUTBOX_FTP,'local'=>INBOX],'method'=>'down']);
 
         $files = get_dir_file_info(INBOX);
-        //print_r($files); exit;
+        //print_r($files);
+        exit;
         foreach ($files as $file){
             if($data = $this->baseclass->checkXmlFile(['file'=>$file]) && date("d/m/Y",$file['date']) != date("d/m/Y",now())){ //Check Valid XML --need to change when live
                 //print_r($data); exit;

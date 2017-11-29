@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bilal.ahmed
- * Date: 11/27/2017
- * Time: 12:13 PM
- */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Outbox extends CI_Controller
 {
@@ -32,7 +27,6 @@ class Outbox extends CI_Controller
         $this->load->helper('file');
         $this->load->helper('directory');
         $this->load->helper('date');
-        //Requests::register_autoloader();
     }
 
     private $qaS = [],$outWorkorder,$cnti;
@@ -112,7 +106,7 @@ class Outbox extends CI_Controller
     ];
 
     public function index(){
-        if(is_cli() == true){
+        if(is_cli()){
             $this->outbox();
         }else{
             echo "Cannot access direct";

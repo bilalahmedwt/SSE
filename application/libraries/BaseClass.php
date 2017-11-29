@@ -14,14 +14,19 @@ class BaseClass
         // Your own constructor code
         $this->CI->load->library('format',[]);
 
+
         $this->CI->load->helper('file');
         $this->CI->load->helper('directory');
         $this->CI->load->helper('date');
         Requests::register_autoloader();
+        $this->connect();
     }
+
+    public $sftp;
 
     public $headers = array('client-id' => '1006', 'client-secret' => '9384fd12efe5b91eac73fabe70e636ba', 'Content-Type' => 'application/x-www-form-urlencoded');
     public $options = ['timeout'=>'100000','connect_timeout'=>'100000'];
+    public $ftpConfig = ['hostname'=>HOSTNAME,'username'=>USERNAME,'password'=>PASSWORD,'port'=>PORT,'debug'=>true,'sftp'=>true];
 
     public $deptCodes = [
         "Electrical Repair"=>"Electrical Repair",
@@ -828,36 +833,85 @@ class BaseClass
         if($dir == 'inbox'){
             if ($type == 'rej'){
                 if(write_file(INBOX .$file['name'], "\n".$resp,'a')){
-                    return rename(INBOX.$file['name'],INBOX_REJECTED.$file['name']);
+                    rename(INBOX.$file['name'],INBOX_REJECTED.$file['name']);
+                    $this->ftpFile(['dir'=>['ftp'=>OUTBOX_FTP_REJECTED,'local'=>INBOX_REJECTED.$file['name']],'method'=>'up']);
+                    return true;
                 }else{
                     log_message('error',"can't write ".INBOX .$file['name']);
                 }
             }else{
-                return rename(INBOX.$file['name'],INBOX_PROCESSED.$file['name']);
+                rename(INBOX.$file['name'],INBOX_PROCESSED.$file['name']);
+                $this->ftpFile(['dir'=>['ftp'=>OUTBOX_FTP_PROCESSED,'local'=>INBOX_PROCESSED.$file['name']],'method'=>'up']);
+                return true;
             }
 
-        }elseif ($dir = 'outbox'){
+        }
+        elseif ($dir = 'outbox'){
             $resp = $this->CI->format->factory($resp, 'json')->to_xml();
             if(write_file(OUTBOX .$file['name'],$resp,'w+')){
                 if ($type == 'rej'){
                     if(write_file(OUTBOX .$file['name'],$errMsgs,'a')){
-                        return rename(OUTBOX.$file['name'],OUTBOX_REJECTED.$file['name']);
+                        rename(OUTBOX.$file['name'],OUTBOX_REJECTED.$file['name']);
+                        $this->ftpFile(['dir'=>['ftp'=>INBOX_FTP_REJECTED,'local'=>OUTBOX_REJECTED.$file['name']],'method'=>'up']);
+                        return true;
                     }else{
                         log_message('error',"can't write ".OUTBOX .$file['name']);
                     }
                 }
-                return rename(OUTBOX.$file['name'],OUTBOX_PROCESSED.$file['name']);
+                rename(OUTBOX.$file['name'],OUTBOX_PROCESSED.$file['name']);
+                $this->ftpFile(['dir'=>['ftp'=>INBOX_FTP_PROCESSED,'local'=>OUTBOX_PROCESSED.$file['name']],'method'=>'up']);
+                return true;
             }else{
                 log_message('error',"can't write ".OUTBOX .$file['name']);
             }
 
-        }elseif ($dir = 'invoice'){
+        }
+        elseif ($dir = 'invoice'){
             $resp = $this->CI->format->factory($resp, 'json')->to_xml();
-            if(!write_file(INVOICE .$file['name'],$resp,'w+')){
+            if(write_file(INVOICE .$file['name'],$resp,'w+')){
+                $this->ftpFile(['dir'=>['ftp'=>INVOICE_FTP,'local'=>INVOICE.$file['name']],'method'=>'up']);
+                return true;
+            }else{
                 log_message('error',"can't write ".INVOICE .$file['name']);
             }
         }
 
     }
 
+    public function connect(){
+        $this->sftp = new \phpseclib\Net\SFTP(HOSTNAME);
+
+        if($this->sftp->login(USERNAME, PASSWORD) == true){
+            return $this->sftp;
+
+        }else{
+            echo 'SSH2/SFTP login using password failed.';
+        }
+    }
+
+    public function ftpFile($params = []){
+
+        $dir = $params['dir'];
+        $method = $params['method'];
+
+        if($method == "down"){
+            $list = $this->sftp->rawlist($dir['ftp']);
+            if($list != NULL){
+                foreach ($list as $file){
+                    if('application/xml' == get_mime_by_extension($file['name']) && !file_exists($dir['local'].$file['name'])) {
+                        $this->sftp->get($dir['ftp'].$file['name'],$dir['local'].$file['name']);
+                    }else{
+                        log_message('error','File not downloads : '.$file['name']);
+                    }
+                }
+            }
+        }
+        elseif ($method == "up"){
+            if(!$this->sftp->put($dir['ftp'],$dir['local'])){
+                log_message('error',"File not upload"."--".$dir['ftp'].":".$dir['local']);
+            }
+
+        }
+
+    }
 }

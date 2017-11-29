@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"rmccue/requests": ">=1.0"
+		"rmccue/requests": ">=1.0",
+		"phpseclib/phpseclib": "~2.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

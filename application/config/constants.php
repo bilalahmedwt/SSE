@@ -93,7 +93,7 @@ define('CLIENT_SECRET','');
 define('CONTENT_TYPE','');
 define('APP_SUBCODE','SSE');
 
-//default Path
+//default Local Path
 define('INBOX',FCPATH.'/assets/files/Inbox/');
 define('OUTBOX',FCPATH.'/assets/files/Outbox/');
 define('INVOICE',FCPATH.'/assets/files/Invoice/');
@@ -101,3 +101,19 @@ define('INBOX_REJECTED',INBOX.'Rejected/');
 define('OUTBOX_REJECTED',OUTBOX.'Rejected/');
 define('INBOX_PROCESSED',INBOX.'Processed/');
 define('OUTBOX_PROCESSED',OUTBOX.'Processed/');
+
+
+//FTP Credentials Live
+define('HOSTNAME','sftp.simplyworkflow.com');
+define('PORT','22');
+define('USERNAME','SSE');
+define('PASSWORD','SS3alskdj');
+
+//default FTP Path
+define('INBOX_FTP','/UAT/INBOX/');
+define('OUTBOX_FTP','/UAT/OUTBOX/');
+define('INVOICE_FTP','/UAT/Invoice');
+define('INBOX_FTP_REJECTED',INBOX_FTP.'Rejected/');
+define('OUTBOX_FTP_REJECTED',OUTBOX_FTP.'Rejected/');
+define('INBOX_FTP_PROCESSED',INBOX_FTP.'Processed/');
+define('OUTBOX_FTP_PROCESSED',OUTBOX_FTP.'Processed/');
