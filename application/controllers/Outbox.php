@@ -71,7 +71,7 @@ class Outbox extends CI_Controller
         ["WorkOrderStatus" => "OP-Scheduled","MessageId" => "A3_0", "Type" => "Appointment", "SubType" => "Rebook", "SubTypeReason" => "CustomerInitiated"],
         ["WorkOrderStatus" => "OP-Scheduled","MessageId" => "A3_1", "Type" => "Appointment", "SubType" => "Rebook", "SubTypeReason" => "OperatingPartnerInitiated"],
         ["WorkOrderStatus" => "OP-Cancelled","MessageId" => "A4_0", "Type" => "Appointment", "SubType" => "Cancellation", "SubTypeReason" => "CustomerInitiated"],
-        ["WorkOrderStatus" => "OP-Cancelled","MessageId" => "A_5_1"," Type" >= "Appointment", "SubType" => "Cancellation", "SubTypeReason" => "UnabletoContactCustomer"],
+        ["WorkOrderStatus" => "OP-Cancelled","MessageId" => "A_5_1"," Type" => "Appointment", "SubType" => "Cancellation", "SubTypeReason" => "UnabletoContactCustomer"],
         ["WorkOrderStatus" => "OP-In-Progress","MessageId" => "V1_0", "Type" => "Visit", "SubType" => "NoAccess", "SubTypeReason" => "CustomerNotPresent"],
         ["WorkOrderStatus" => "OP-In-Progress","MessageId" => "V1_2", "Type" => "Visit", "SubType" => "NoAccess", "SubTypeReason" => "NoAnswerAtDoor"],
         ["WorkOrderStatus" => "OP-In-Progress","MessageId" => "V1_3", "Type" => "Visit", "SubType" => "NoAccess", "SubTypeReason" => "RefusedAccessbyCustomer"],

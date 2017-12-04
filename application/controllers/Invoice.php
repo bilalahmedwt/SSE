@@ -284,10 +284,7 @@ class Invoice extends CI_Controller
 
     public function index(){
         //15 days bydefault
-        if(!is_cli()){
-            echo "Direct access not allowed";
-            return false;
-        }
+
         $date = new DateTime(); //change to now on Live
         $this->endDate = $date->format('Y-m-d H:i:s');
         $this->startDate = $date->modify('-15 days')->format('Y-m-d H:i:s');
@@ -393,9 +390,6 @@ class Invoice extends CI_Controller
     }
 
     private function LoadWorkOrders($params = []){
-
-        //from FTP download
-        //$this->baseclass->ftpFile(['dir'=>['ftp'=>OUTBOX_FTP_PROCESSED,'local'=>INBOX_PROCESSED],'method'=>'down']);
         $proFiles = get_dir_file_info(INBOX_PROCESSED);
 
         if($proFiles != NULL){
@@ -406,8 +400,6 @@ class Invoice extends CI_Controller
             }
         }
 
-        //from FTP download
-        //$this->baseclass->ftpFile(['dir'=>['ftp'=>OUTBOX_FTP_REJECTED,'local'=>INBOX_REJECTED],'method'=>'down']);
         $rejFiles = get_dir_file_info(INBOX_REJECTED);
 
         if($rejFiles != NULL){
